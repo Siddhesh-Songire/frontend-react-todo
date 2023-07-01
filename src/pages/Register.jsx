@@ -1,18 +1,19 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
-import { server } from "../main";
+import { Context, server } from "../main";
 import toast from "react-hot-toast";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { isAuthenticated, setIsAuthenticated, loading, setLoading } =
+    useContext(Context);
 
   const submitHandler = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    console.log(name, email);
-
     try {
       const { data } = await axios.post(
         `${server}/user/new`,
@@ -30,10 +31,16 @@ const Register = () => {
       );
 
       toast.success(data.message);
+      setIsAuthenticated(true);
+      setLoading(false);
     } catch (error) {
-      toast.error("Some Error");
+      toast.error(error.response.data.message);
+      setIsAuthenticated(false);
+      setLoading(false);
     }
   };
+
+  if (isAuthenticated) return <Navigate to={"/"} />;
 
   return (
     <div className="login">
@@ -47,22 +54,22 @@ const Register = () => {
             required
           />
           <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="Email"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             type="password"
             required
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Sign up</button>
+          <button type="submit">Sign Up</button>
           <h4>Or</h4>
-          <Link to="/login">Log in</Link>
+          <Link to="/login">Log In</Link>
         </form>
       </section>
     </div>
