@@ -85,7 +85,7 @@ const Home = () => {
       });
   }, [refresh]);
 
-  if (!isAuthenticated) return <Navigate to={"/login"} />;
+  if (!isAuthenticated) return <Navigate to={"/register"} />;
 
   return (
     <div className="container">
