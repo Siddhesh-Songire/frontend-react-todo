@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Context, server } from "../main";
 
 const Header = () => {
-  const { isAuthenticated, setIsAuthenticated, loading, setLoading } =
+  const { isAuthenticated, setIsAuthenticated, loading, setLoading, user } =
     useContext(Context);
 
   const logoutHandler = async () => {
@@ -32,7 +32,7 @@ const Header = () => {
       </div>
       <article>
         <Link to={"/"}>Home</Link>
-        <Link to={"/profile"}>Profile</Link>
+        {isAuthenticated && <Link to="/profile">Profile</Link>}
         {isAuthenticated ? (
           <button disabled={loading} onClick={logoutHandler} className="btn">
             Logout
